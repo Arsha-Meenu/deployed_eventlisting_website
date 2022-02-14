@@ -1,0 +1,282 @@
+{% extends "events/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- css search --> 
+<style>
+  form.search input[type=text] {
+     padding: 10px;
+     font-size: 17px;
+     border: 1px solid grey;
+     float: left;
+     width: 80%;
+     background: #f1f1f1;
+  }
+  form.search button {
+     float: left;
+     width: 20%;
+     padding: 10px;
+     background: #2196F3;
+     color: white;
+     font-size: 17px;
+     border: 1px solid grey;
+     border-left: none;
+     cursor: pointer;
+  }
+  form.search button:hover {
+     background: #0b7dda;
+  }
+  form.search::after {
+     content: "";
+     clear: both;
+     display: table;
+  }
+  /* filter field horizontal */
+  li {
+     list-style-type: none; 
+     display : inline;
+  }
+  hr{
+     border: 0;
+     clear:both;
+     display:block;
+     width: 96%; 
+     height: 1px;
+  }
+</style>
+
+
+<nav class="navbar navbar-expand-lg fixed-top">
+ <div class="container-fluid">
+   <a class="navbar-brand" href="{% url 'events:landing-page' %}"><img src="{% static 'events/images/logo/logo2.jpg' %}" style="height: 40px;border: 1px solid red;border-radius: 12px;float: left;">&nbsp;EDuCOn</a>
+   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+   aria-label="Toggle navigation">
+   <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+
+  {% if request.user.is_authenticated %}   
+
+  <ul class="navbar-nav ml-lg-auto">
+    <li class="nav-item">
+      <a href="{% url 'events:landing-page' %}" class="nav-link smoothScroll">Home</a>
+   </li>
+   {% block navbar %}        
+   <li class="nav-item">
+     <a href="{% url 'events:user-profile' %}" class="nav-link smoothScroll">Profile</a>
+  </li>         
+  <li class="nav-item">
+   <span style="color: rgb(248, 248, 248);">Hi,  <span style="color: yellow; text-transform: capitalize;"> {{request.user.username}}</span></span>&nbsp;&nbsp; 
+</li>&nbsp;&nbsp;
+<li class="nav-item">
+   <span><a href="{% url 'events:logout' %}" style="color: white;font-size: 15px;">LOGOUT</a></span>
+</li>                
+</ul>                
+
+{%endblock%}
+{% else %}
+<ul class="navbar-nav ml-lg-auto">
+   <li class="nav-item">
+     <a href="{% url 'events:landing-page' %}" class="nav-link smoothScroll">Home</a>
+  </li>
+</ul>
+{% endif %}
+</div>
+</div>
+</nav>
+<!-- EVENT LISTING -->
+<section class="schedule section "  >
+ <div class="container">
+  <div class="row">                  
+   <div class="col-lg-12 col-12 text-center">
+    <h6 data-aos="fade-up"></h6>
+    <h2 class="text-white" data-aos="fade-up" data-aos-delay="200"><a href="{% url 'events:event-list' %}" style="color: white;">EVENT &nbsp; LISTS</a> </h2>
+ </div>
+</div>
+</div><hr><hr>                                   
+<div class="container-fluid">
+  <div class="row">
+   <div class="col-12" style="padding-left: 1500px;">
+    <form class="search" action="{% url 'events:event-filtering' %}" method="get" style="margin:auto; max-width:300px">
+     {% csrf_token %}
+     <input type="text" placeholder="Searching for..." name="search" value="{{request.GET.search}}">
+     <button type="submit"><i class="fa fa-search"></i></button>
+  </form>
+</div>     
+</div>
+</div>                                 
+<p></p>
+<div class="container-fluid">
+  <form method="GET" action="{% url 'events:event-filtering' %}">
+   <div class = "form-row">
+    <div class="form-group col-3">
+     <label style="color: white;">Start Date :&nbsp;</label>
+     <input type="date" name="sdate_search" id="start_date"  placeholder="Start Date" value="{{request.GET.sdate_search}}" >
+  </div>
+  <div class="form-group col-3">
+     <label style="color: white;">End Date :&nbsp;</label>
+     <input type="date" name="edate_search" id="end_date" placeholder = "End Date" value="{{request.GET.edate_search}}">
+  </div>
+  <div class="form-group col-3">     
+     <label style="color: white;">Category :&nbsp;</label>
+      <select id="category" name="catey_search"   style="width:300px;height: 30px;" placeholder="select categories" >                               
+      <option >Select Category</option>  
+      {% for cate in category_list %}
+      <option value="{{ cate }}" {% if request.GET.catey_search == cate %}selected{% endif %} >{{ cate }}</option>
+      {% endfor %}
+   </select>
+</div>
+<div class="form-group col-2" style="float: right;">                            
+  <button type="submit" class="btn btn-success " style="width: calc(4.25rem + 30px);
+      border-color: transparent;
+      color: var(--white-color);
+      cursor: pointer;                           
+      height: calc(1.40rem + 14px);border-radius: 4px;" name="submit">Filter</button>
+  &nbsp;&nbsp;
+  <button type="submit"  class="btn btn-warning" style="height: calc(1.50rem + 13px)"><a href="{% url 'events:event-list' %}">Cancel</a></button>                
+</div>
+</div>
+</form>
+<hr><hr>
+<p></p>                 
+
+<!-- at the filter result -->
+{% if queryset %}
+<div class="row" id ="p1">
+   
+   {% for q in queryset %}
+   <div class="col-lg-3 text-center">
+    <div class="card card-margin" style="width:400px;height: 660px;">
+     <div class="card-header no-border text-white" style="background-color: rgb(7, 108, 116);">
+        <img class="card-img-top" src="{{q.event_image.url}}" alt="event image "style="width: 350px;height: 250px;">
+
+        <h5 class="card-title text-center text-uppercase font-weight-bold">{{q.title}}</h5>
+     </div>
+     <div class="card-body pt-0">
+      <div class="widget-49">
+       <div class="widget-49-title-wrapper">
+        <div class="widget-49-date-primary"><hr>
+         <i class="fa fa-calendar"></i>
+         <span class="widget-49-date-day text-danger">{{q.start_date}} <b style="color: black;">&nbsp;to&nbsp; </b> {{q.end_date}}</span><hr>
+         <em>Venue : </em> <span class="widget-49-date-month text-primary">{{q.location.name}}</span><hr>   
+         <em>Free or Paid :</em>
+         {% if q.paid == True %}
+         <span class="widget-49-date-day text-primary">Paid </span><br><hr>                                  
+         {% else %}
+         <span class="widget-49-date-day text-danger">Free </span><br><hr>
+         {% endif %}                                
+         
+      </div>
+      <div class="widget-49-meeting-info">
+         <span class="widget-49-pro-title d-inline-block text-truncate" style="max-width: 290px;"> <em>Category :</em>&nbsp; <span class="widget-49-date-month text-primary">{{q.categories}}</span></span>
+         <span class="widget-49-meeting-time"></span>
+      </div>
+   </div>
+   
+   <hr>
+   <div class="widget-49-meeting-action" style="float: right;">
+      <a href="{% url 'events:get-event-details' pk=q.id  %} " class="btn border border-primary text-success "  ><em>More info</em> &nbsp;....</a>
+   </div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+{% endfor %}
+<!-- end  -->
+</div>
+<hr>
+<div class="pagination ">
+  <span class="step-links">
+   {% if queryset.has_previous %}
+   <a href="?page=1">&nbsp; &laquo;&nbsp; first&nbsp;</a>
+   <a href="?page={{ queryset.previous_page_number }}">&nbsp;previous&nbsp;</a>
+   {% endif %}
+   <span class="current" style="color: rgb(236, 142, 34);">
+    &nbsp;    Page &nbsp;{{ queryset.number }}&nbsp; of&nbsp; {{ queryset.paginator.num_pages }}.
+ </span>
+ {% if queryset.has_next %}
+ <a href="?page={{ queryset.next_page_number }}" >&nbsp;next &nbsp;</a>
+ <a href="?page={{ queryset.paginator.num_pages }}">&nbsp;last &raquo;&nbsp;</a>
+ {% endif %}
+</span>
+</div>     
+{% else %}
+<div class="row">
+   <!-- normal event listing -->
+   {% for event in event_object %}
+   <div class="col-lg-3 text-center">
+      <div class="card card-margin "  style="width:400px;height: 660px;">
+       <div class="card-header no-border text-white" style="background-color: rgb(7, 108, 116);">
+        <img class="card-img-top" src="{{event.event_image.url}}" alt="event image" style="width: 350px;height: 250px;">
+
+        <h5 class="card-title text-center text-uppercase font-weight-bold">{{event.title}}</h5>
+     </div>
+     
+     <div class="card-body pt-0">
+        <div class="widget-49">
+         <div class="widget-49-title-wrapper">
+          <div class="widget-49-date-primary">
+           <hr>
+           <i class="fa fa-calendar"></i> <span class="widget-49-date-day text-danger">
+            {{event.start_date}} <b style="color: black;">&nbsp;to&nbsp; </b> {{event.end_date}}</span><br><hr>
+            <em> Venue :</em> <span class="widget-49-date-month text-primary">{{event.location.name}}</span><hr>
+            <em>Free or Paid :</em>
+            {% if event.paid == True %}
+            <span class="widget-49-date-day text-primary">Paid </span><br><hr>                                  
+            {% else %} 
+            <span class="widget-49-date-day text-danger">Free </span><br><hr>
+            {% endif %}
+         </div>
+         <div class="widget-49-meeting-info">
+            <span class="widget-49-pro-title d-inline-block text-truncate" style="max-width: 290px;"><em>Category :</em>&nbsp;<span class="widget-49-date-month text-primary"> {{event.categories}}</span></span>
+            <span class="widget-49-meeting-time"></span>
+         </div>
+      </div>
+      <hr>
+      <div class="widget-49-meeting-action" style="float: right;">
+         <a href="{% url 'events:get-event-details' pk=event.id  %} " class="btn border border-primary text-success  " ><em>More info</em> &nbsp;....</a>
+      </div>
+   </div>
+</div>
+</div>
+<hr>
+</div>
+{% endfor %}  
+</div>
+<hr>
+<div class="pagination ">
+ <span class="step-links">
+  {% if event_object.has_previous %}
+  <a href="?page=1" class="text-white" style="font-weight: bolder;">&nbsp;&laquo; &nbsp;first&nbsp;</a>
+  <a href="?page={{ event_object.previous_page_number }}" class="text-white">&nbsp;previous&nbsp;</a>
+  {% endif %}
+  <span class="current"  style="color: rgb(236, 142, 34);font-weight: bolder;">
+    &nbsp; Page &nbsp;{{ event_object.number }} &nbsp;of &nbsp;{{ event_object.paginator.num_pages }}.
+ </span>
+ {% if event_object.has_next %}
+ <a href="?page={{ event_object.next_page_number }}" class="text-white">&nbsp;next&nbsp;</a>
+ <a href="?page={{ event_object.paginator.num_pages }}" class="text-white">&nbsp;last &nbsp;&raquo;&nbsp;</a>
+ {% endif %}
+</span>
+</div> 
+{% endif %}
+</div>
+<!-- information for the users -->
+{% if not request.user.is_authenticated %}  
+<div class="container-fluid text-center"style="margin-top:200px">
+  <div class="row">
+   <div class="col-12">      
+     <p style="color: rgb(254, 255, 255);font-weight: bolder;font-size: 1.6em;text-align: center;top: 10px;"><b style="color: red;">*** </b> You can book the paid events only by creating your account.<b style="color: red;"> ***</b></p>
+  </div>
+</div>
+</div>
+{% endif %} 
+<!-- end -->
+</section>
+
+
+{% endblock %}

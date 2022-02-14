@@ -1,0 +1,128 @@
+    <!-- header and footer only here -->
+
+    {% load static %}
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <title>EDUCON 2022</title>
+    <!-- add icon link -->
+        <link rel = "icon" href = "{% static 'events/images/logo/logo2.jpg' %}" type = "image/x-icon">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+        <meta charset="UTF-8">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link rel="stylesheet" href="{% static 'events/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'events/css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'events/css/font-awesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'events/css/aos.css' %}">
+        <!-- MAIN CSS -->
+        <link rel="stylesheet" href="{% static 'events/css/tooplate-gymso-style.css' %}">
+    </head>
+    <body data-spy="scroll" data-target="#navbarNav" data-offset="50">
+    <!-- header section -->
+        
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'events:landing-page' %}"><img src="{% static 'events/images/logo/logo2.jpg' %}" style="height: 40px;border: 1px solid red;border-radius: 12px;float: left;">&nbsp;EDuCOn</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    {% if request.user.is_authenticated %}   
+                    <ul class="navbar-nav ml-lg-auto">
+                        <li class="nav-item">
+                            <a href="{% url 'events:landing-page' %}" class="nav-link smoothScroll">Home</a>
+                        </li>
+                            {% block navbar %}
+                        <li class="nav-item">
+                            <a href="#about" class="nav-link smoothScroll">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact" class="nav-link smoothScroll">Contact</a>
+                        </li>                       
+                        
+                        <li class="nav-item">
+                            <a href="{% url 'events:event-list' %}" class="nav-link smoothScroll">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'events:user-profile' %}" class="nav-link smoothScroll">Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <span style="color: rgb(248, 248, 248);">Hi,  <span style="color: yellow;text-transform: capitalize;"> {{request.user.username}}</span></span>&nbsp;&nbsp; 
+                        </li>&nbsp;&nbsp;
+                        <li class="nav-item">
+                            <span><a href="{% url 'events:logout' %}" style="color: white;font-size: 15px;">LOGOUT</a></span>
+                        </li>                
+                    </ul>               
+                                                    
+                            {%endblock%}
+                    <!-- not an auth user  -->
+                    {% else %}
+                    <ul class="navbar-nav ml-lg-auto">
+                        <li class="nav-item">
+                            <a href="{% url 'events:landing-page' %}" class="nav-link smoothScroll">Home</a>
+                        </li>
+                            {% block navbar2 %}
+                        <li class="nav-item">
+                            <a href="#about" class="nav-link smoothScroll">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#contact" class="nav-link smoothScroll">Contact</a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a href="{% url 'events:event-list' %}" class="nav-link smoothScroll">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'events:register' %}" class="nav-link smoothScroll">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'events:login' %}" class="nav-link smoothScroll">Login</a>
+                        </li>                    
+                    </ul>
+                    
+                    <ul class="social-icon ml-lg-3">
+                        <li><a href="#" class="fa fa-facebook"></a></li>
+                        <li><a href="#" class="fa fa-twitter"></a></li>
+                        <li><a href="#" class="fa fa-instagram"></a></li>
+                    </ul>                                    
+                             {%endblock%} 
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        {% block content %}
+        <!-- contents here -->
+        {% endblock %}
+    <!-- FOOTER SECTION-->
+    <footer class="site-footer footer-bg ">
+        <div class="container">
+            <div class="row">
+                <div class="ml-auto col-lg-4 col-md-5">
+                    <p class="copyright-text" style="color: rgb(0, 0, 0);">Copyright &copy; 2020 Educon Co.                  
+                    <br>Design: <a href="#" style="color: rgb(238, 15, 15);">EDuCOn</a></p>
+                </div>
+                <div class="d-flex justify-content-center mx-auto col-lg-5 col-md-7 col-12">
+                    <p class="mr-4">
+                        <i class="fa fa-envelope-o mr-1"></i>
+                        <a href="#" style="color: rgb(0, 0, 0);">educon@company.co</a>
+                    </p>
+                    <p><i class="fa fa-phone mr-1"style="color: white;"></i> 010-020-0840</p>
+                </div>              
+            </div>
+        </div>
+    </footer>
+    <!-- Footer section end -->
+    <!-- SCRIPTS -->
+    <script src="{% static 'events/js/jquery.min.js' %}"></script>
+    <script src="{% static 'events/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'events/js/aos.js' %}"></script>
+    <script src="{% static 'events/js/smoothscroll.js' %}"></script>
+    <script src="{% static 'events/js/custom.js' %}"></script>
+
+    </body>
+    </html>

@@ -1,0 +1,159 @@
+/* emp-profile for userprofile styles */
+       .emp-profile{
+           
+           height: 900px;     
+           color: whitesmoke;
+           background:url("/static/events/images/background/userprofilebg3.jpg");
+           background-size: cover;
+            background-position: top;
+            background-repeat: no-repeat;
+           text-transform: uppercase;
+           font-size: large;
+           font-weight: larger;
+
+       }
+       .profile-img{
+           text-align: center;
+       }
+       .profile-img img{
+           width: 70%;
+           height: 100%;
+       }
+       .profile-img .file {
+           position: relative;
+           overflow: hidden;
+           margin-top: -20%;
+           width: 70%;
+           border: none;
+           border-radius: 0;
+           font-size: 15px;
+           background: #212529b8;
+       }
+       .profile-img .file input {
+           position: absolute;
+           opacity: 0;
+           right: 0;
+           top: 0;
+       }
+       .profile-head h5{
+           color: rgb(255, 255, 255);
+       }
+       .profile-head h6{
+           color: #ff0cd7;
+       }
+       .profile-edit-btn{
+           /* display: inline-block; */
+           border: none;
+           border-radius: 1.5rem;
+           width: 80%;
+           padding: 2%;
+           font-weight: 600;
+           color: #6c757d;
+           cursor: pointer;
+           
+           
+
+       }
+       .proile-rating{
+           font-size: 12px;
+           color: #fc1717;
+           margin-top: 5%;
+       }
+       .proile-rating span{
+           color: #495057;
+           font-size: 15px;
+           font-weight: 600;
+       }
+       .profile-head .nav-tabs{
+           margin-bottom:5%;
+       }
+       .profile-head .nav-tabs .nav-link{
+           font-weight:600;
+           border: none;
+       }
+       .profile-head .nav-tabs .nav-link.active{
+           border: none;
+           border-bottom:2px solid #0062cc;
+       }
+       .profile-work{
+           padding: 14%;
+           margin-top: -15%;
+       }
+       .profile-work p{
+           font-size: 12px;
+           color: rgb(7, 4, 4);
+           font-weight: 600;
+           margin-top: 10%;
+       }
+       .profile-work a{
+           text-decoration: none;
+           color: white;
+           font-weight: 600;
+           font-size: 14px; 
+       }
+       .profile-work ul{
+           list-style: none;
+       }
+       /* userprofile userid_etc details */
+       .profile-tab label{
+           font-weight: 800;
+       }
+       .profile-tab p{
+           font-weight: 800;
+           color: #f5f1f1;
+       }
+       .footer-bg{
+        position: static    ;
+        padding: 10px 10px 0px 10px;
+        bottom: 0;
+        width: 100%;
+        /* Height of the footer*/ 
+        height:50%;
+        /* background: grey; */
+        background: burlywood;
+        color: white;
+                  
+       }
+       .profile-bg{
+        background: url("https://wallpaperaccess.com/full/1155007.jpg") ;
+           padding: 1%;
+           height: 790px;
+           margin-top: 3%;
+           margin-bottom: 0%;
+           border-radius: 1rem;
+           color: rgb(8, 8, 8);
+           text-align: center;
+           /* background:-webkit-linear-gradient(left,#58e7d9, #ddacec  ); */
+
+       }
+       .image-bg{
+        padding: 17%;
+        height: 720px;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        border-radius: 1rem;
+        color: rgb(8, 8, 8);
+        text-align: center;
+        background:-webkit-linear-gradient(left,#58e7d9, #ddacec  );
+
+
+       }
+
+       .modal-notify .modal-header {
+        border-radius: 3px 3px 0 0;
+        }
+        .modal-notify .modal-content {
+            border-radius: 3px;
+        }
+
+        .event-detail{
+
+            padding: 10%;
+            height: 690px;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            border-radius: 0.2rem;
+            color: rgb(8, 8, 8);
+            background:-webkit-linear-gradient(left,#58e7d9, #ddacec  );
+        }
+      

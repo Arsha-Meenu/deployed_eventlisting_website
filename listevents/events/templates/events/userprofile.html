@@ -1,0 +1,122 @@
+{% extends "events/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'events/css/style.css' %}">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+{% block navbar %}&nbsp;&nbsp;  
+{% if request.user.is_authenticated %}   
+<span style="color: rgb(248, 248, 248);">Hi, <span style="color: yellow;text-transform: capitalize;"> {{request.user.username}}</span>&nbsp;&nbsp;  
+<span><a href="{% url 'events:logout' %}" style="color:white;font-size: 15px;">LOGOUT</a></span>
+{% endif %}
+{% endblock %}
+
+
+<div class="container-fluid emp-profile" >
+  <div class="row">
+    <div class="col-12"><hr><hr><hr></div>
+  </div>
+  <div class="col-md-2 " style="float: right;">
+    <button type="submit" class="profile-edit-btn ">
+      <a href="{% url 'events:userprofile-update' pk=user_detail.id  %}" style="color: rgb(12, 28, 255);font-weight: bolder;text-decoration: none;">Edit Profile</a></button>
+      
+    </div>
+    <form method="post">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="profile-img">                          
+          </div>
+        </div>                  
+        
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card" style="width: 18rem;">
+
+            <img class="card-img-top border border-dark rounded" style="height:18rem; ;width:18rem;;padding: 4px;" src="{{user_detail.image.url|default:'-'}}" alt="Card image cap"> 
+            
+            <span type="file" name="file" style="text-align: center;" />  <br>               
+            <a href="{% url 'events:userimage-update' pk=user_detail.id  %}" style="color: rgb(12, 28, 255);text-decoration: none;text-transform: capitalize;"/><b>Change Photo</b></a>
+          </span>
+          <div class="card-body text-center  text-dark">
+            <b>Name:</b><p class="card-title text-capitalize">{{user_detail.first_name|default:"-" }} {{user_detail.last_name|default:"-" }}</p>
+            <b>Email:</b><p class="card-text text-lowercase">{{user_detail.email|default:"-" }}</p>
+            
+          </div> 
+        </div>                                          
+      </div>
+      <div class="col-md-8">
+        <div class="tab-content profile-tab" id="myTabContent">
+          <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><br><br><br>
+            <div class="row">
+              <div class="col-md-6">
+                <label>User Id</label>
+              </div>
+              <div class="col-md-6 ">
+                <p>: {{user_detail.id|default:"-" }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <label>Name</label>
+              </div>
+              <div class="col-md-6 text-capitalize">
+                <p>: {{user_detail.first_name|default:"-" }} {{user_detail.last_name|default:"-" }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 ">
+                <label>Email</label>
+              </div>
+              <div class="col-md-6 text-lowercase">
+                <p>: {{user_detail.email|default:"-" }}</p>
+              </div>
+            </div>
+            <div><p></p></div>
+            <!-- booking view -->
+            <hr>
+            <div class="row">
+              <div class="col-12">
+               <caption><b>View Booked Events :</b></caption><br><br>
+               <table class="table table-bordered schedule-table ">                
+                <thead class="thead-light">
+                  <th>Si.No</th>
+                  <th>Title</th>
+                  <!-- <th>Description</th> -->
+                  <th>Location</th>
+                  <th>Category</th>
+                  <th>Start Date</th>
+
+                </thead>
+                <tbody class="tbody-light">                  
+                  {% for obj in event_list %}
+                  <tr >
+                   <td>{{forloop.counter}}</td>
+                   <td>{{obj.title}}</td>
+                   <!-- <td>{{obj.description}}</td> -->
+                   <td>{{obj.location.name}}</td>
+                   <td>{{obj.category}}</td>  
+                   <td>{{obj.startdate}}</td>    
+                 </tr>   
+                 {% endfor %}                                     
+               </tbody>
+             </table>
+             <p></p>
+           </div>
+         </div>
+       </div>  
+     </div>
+   </div>
+ </div>
+</form>       
+
+</div>
+
+
+{% endblock %}
+
