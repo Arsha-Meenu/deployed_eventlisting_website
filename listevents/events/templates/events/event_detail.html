@@ -219,9 +219,9 @@ color: #20247b;
                       <p>
                         <form action="{% url 'events:create-checkout-session' event_details.id %}" method="POST">
                           {% csrf_token %}
-                          
+
                           <!-- if the user_id is in userevent table  -->
-                          {% if booked_event == True %}
+                          {% if user_event == True %}
                           <input type="button"   class="btn btn-success " disabled value="Booked"> </button>                                  
                           {% else %}    
                           <button class="btn btn-info " id="checkout-button" type="submit" >Booking</button>                         

@@ -10,7 +10,7 @@ from pickle import NONE
 from pickletools import read_uint1
 from re import L, template
 import re
-from tkinter.messagebox import NO
+# from tkinter.messagebox import NO
 from unicodedata import category
 from urllib import response
 from webbrowser import get
@@ -88,7 +88,7 @@ class EventListView(ListView):
 # event details in  more info
 
 class EventDetailView(DetailView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
     model = Event
 
     def get_context_data(self, *args,**kwargs) :
@@ -99,21 +99,20 @@ class EventDetailView(DetailView):
         print(user)
         print(event_id)
         event_details = get_object_or_404(Event,id=event_id)
-        user_event_qs = UserEvent.objects.filter(event_id=event_id,user = user).exists()
-        print(user_event_qs)
         
-
-        # if self.request.user.is_authenticated:
-        #     userevent_qs = UserEvent.objects.filter(event_id = event_id,user=self.request.user).values('is_booked').first()
-        #     print("moreinfo")
-        #     booked_event = userevent_qs.get('is_booked')
-        #     print(userevent_qs.get('is_booked'))  
-        # else:
-        #     booked_event = 'False'
+        if user.is_authenticated:
+            print("user")
+            user_event_qs = UserEvent.objects.filter(event_id=event_id,user = user).exists()
+            print(user_event_qs)
+        else:
+            print("no user")
+            user_event_qs = 'False'
+        
+        print(user_event_qs)
         context={
             "eventid":event_id,
             'event_details':event_details,
-            'booked_event':user_event_qs
+            'user_event':user_event_qs
             }
         return context
 
@@ -268,7 +267,15 @@ class CreateCheckoutSessionView(View):
         user = self.request.user
         host = self.request.get_host()     
         event_id  = self.kwargs['pk']
-        event_obj = Event.objects.get(id = event_id)                              
+        event_obj = Event.objects.get(id = event_id) 
+        print(event_obj)  
+        # import pdb
+        # pdb.set_trace()                      
+        user_event,created = UserEvent.objects.get_or_create(user_id = user.id ,event_id = event_obj.id,is_booked = True) 
+        # user_event.is_booked = 1  
+        print('b')
+        user_event.save()
+
         checkout_session = stripe.checkout.Session.create(
                 payment_method_types=[
                     'card',
@@ -286,9 +293,9 @@ class CreateCheckoutSessionView(View):
             cancel_url = "http://{}{}".format(host,reverse('events:landing-page')),
 
         ) 
-        user_event,created = UserEvent.objects.get_or_create(user_id = user.id ,event_id = event_obj.id) 
-        user_event.is_booked = 1  
-        user_event.save()
+        print('a')
+
+        
         subject = 'Successfull Booking of Event'
         message = f'Hi {user.username}, your payment is successfully completed and you booked the {event_obj.title}.'
         email_from = settings.EMAIL_HOST_USER
@@ -298,6 +305,7 @@ class CreateCheckoutSessionView(View):
 
 
 # likes and dislikes section
+
 @login_required
 def LikedEvent(request,id):
     user = request.user
